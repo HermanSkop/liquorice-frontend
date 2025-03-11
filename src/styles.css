@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary-color: rgb(34, 37, 41);
+  --primary-color-dark: rgb(110, 117, 124);
+
+  --bs-primary: var(--primary-color);
+  --bs-primary-rgb: 186, 16, 16;
+}
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: var(--primary-color-dark) !important;
+  border-color: var(--primary-color-dark) !important;
+}
+
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.border-primary {
+  border-color: var(--primary-color) !important;
+}
+
+/* Add these for active states and badges */
+.page-item.active .page-link {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.badge.bg-light.text-primary {
+  color: var(--primary-color) !important;
+}
