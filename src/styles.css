@@ -37,3 +37,37 @@
 .badge.bg-light.text-primary {
   color: var(--primary-color) !important;
 }
+
+/* Pagination styles */
+.pagination .page-link {
+  color: var(--primary-color);
+  border-color: #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: white;
+}
+
+.pagination .page-link:hover,
+.pagination .page-link:focus {
+  color: var(--primary-color-dark);
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  border-color: rgba(var(--bs-primary-rgb), 0.25);
+  cursor: pointer;
+}
+
+/* Other Bootstrap components that might use primary color */
+.form-check-input:checked {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+a {
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--primary-color-dark);
+}
