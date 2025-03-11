@@ -1,0 +1,83 @@
+<div class="container mt-4">
+  <h2 class="mb-3">Product Catalog</h2>
+
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search..."
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="selectedCategory">
+        <option value="">All Categories</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="sortOption">
+        <option value="name">Sort by Name</option>
+        <option value="price">Sort by Price</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button class="btn btn-primary w-100" (click)="toggleLayout()">
+        {{ isSingleColumn ? 'Switch to Grid View' : 'Switch to List View' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div
+      class="mb-3"
+      [class.col-md-12]="isSingleColumn"
+      [class.col-md-4]="!isSingleColumn"
+      *ngFor="let product of filteredProducts()"
+    >
+      <div class="card h-100">
+        <div class="row g-0 h-100 d-flex" [class.flex-row]="isSingleColumn" [class.text-center]="!isSingleColumn">
+          <div class="col-md-3 w-auto align-content-center">
+            <img [src]="product.image ? ('data:image/jpeg;base64,' + product.image) : 'placeholder.png'"
+                 class="img-fluid rounded h-100" alt="{{ product.name }}" width="200">
+          </div>
+          <div class="col-md-8 align-content-center flex-grow-1">
+            <div class="card-body d-flex justify-content-between align-content-center">
+              <div class="left-side d-flex flex-column align-items-start">
+                <h5 class="card-title mb-3 text-start">{{ product.name }}</h5>
+                <p *ngFor="let category of product.categories" class="card-text mb-0">{{ category.name }}</p>
+              </div>
+              <button class="card-text align-self-center btn p-3 border"><strong>${{ product.price }}</strong></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <a class="page-link" (click)="previousPage()" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item" *ngFor="let page of getTotalPagesArray()"
+              [class.active]="page === currentPage + 1">
+            <a class="page-link" (click)="goToPage(page - 1)">{{page}}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+            <a class="page-link" (click)="nextPage()" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="text-center">
+        <span>Showing {{currentPage * pageSize + 1}} to {{getLastItemIndex()}} of {{totalItems}} items</span>
+      </div>
+    </div>
+  </div>
+</div>
