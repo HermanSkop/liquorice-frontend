@@ -1,0 +1,85 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+          <ul class="nav nav-tabs card-header-tabs d-flex gap-1">
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="isLogin" href="javascript:void(0)" (click)="isLogin = true; submitted = false">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="!isLogin" href="javascript:void(0)" (click)="isLogin = false; submitted = false">Register</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-body p-4">
+          <!-- Login Form -->
+          <form *ngIf="isLogin" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" formControlName="email">
+              <div *ngIf="submitted && loginForm.controls['email'].errors" class="text-danger mt-1">
+                <small *ngIf="loginForm.controls['email'].errors?.['required']">Email is required</small>
+                <small *ngIf="loginForm.controls['email'].errors?.['email']">Please enter a valid email</small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" formControlName="password">
+              <div *ngIf="submitted && loginForm.controls['password'].errors" class="text-danger mt-1">
+                <small *ngIf="loginForm.controls['password'].errors?.['required']">Password is required</small>
+                <small *ngIf="loginForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters</small>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+
+            <div class="mt-3 text-center">
+              <small>Don't have an account? <a href="javascript:void(0)" (click)="toggleMode()">Register here</a></small>
+            </div>
+          </form>
+
+          <!-- Register Form -->
+          <form *ngIf="!isLogin" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="regEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="regEmail" formControlName="email">
+              <div *ngIf="submitted && registerForm.controls['email'].errors" class="text-danger mt-1">
+                <small *ngIf="registerForm.controls['email'].errors?.['required']">Email is required</small>
+                <small *ngIf="registerForm.controls['email'].errors?.['email']">Please enter a valid email</small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="regPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" id="regPassword" formControlName="password">
+              <div *ngIf="submitted && registerForm.controls['password'].errors" class="text-danger mt-1">
+                <small *ngIf="registerForm.controls['password'].errors?.['required']">Password is required</small>
+                <small *ngIf="registerForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters</small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword">
+              <div *ngIf="submitted && registerForm.controls['confirmPassword'].errors" class="text-danger mt-1">
+                <small *ngIf="registerForm.controls['confirmPassword'].errors?.['required']">Please confirm your password</small>
+              </div>
+              <div *ngIf="submitted && registerForm.hasError('mismatch') && !registerForm.controls['confirmPassword'].errors?.['required']" class="text-danger mt-1">
+                <small>Passwords do not match</small>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+
+            <div class="mt-3 text-center">
+              <small>Already have an account? <a href="javascript:void(0)" (click)="toggleMode()">Login here</a></small>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

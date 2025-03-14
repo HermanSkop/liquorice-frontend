@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {ProductService} from '../../services/product-service';
+import {ProductService} from '../../services/product.service';
 import {ProductPreviewDto} from '../../dtos/product-preview.dto';
 import {PagedResponse} from '../../dtos/api-response';
 
@@ -10,7 +10,8 @@ import {PagedResponse} from '../../dtos/api-response';
   templateUrl: './catalog.component.html',
   imports: [
     NgForOf,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   styleUrls: ['./catalog.component.css']
 })
@@ -58,7 +59,6 @@ export class CatalogComponent implements OnInit {
   loadPage(page: number) {
     this.productService.getProductPreviewDtos(page, this.pageSize).subscribe({
       next: (response: PagedResponse<ProductPreviewDto>) => {
-        console.log("API Response:", response);
         this.products = response.content || [];
         this.totalItems = response.totalElements;
         this.totalPages = response.totalPages;
@@ -92,5 +92,18 @@ export class CatalogComponent implements OnInit {
 
   getLastItemIndex(): number {
     return Math.min((this.currentPage + 1) * this.pageSize, this.totalItems);
+  }
+
+  getVisiblePages(): number[] {
+    const delta = 2;
+    const pages: number[] = [];
+    const leftBound = Math.max(2, this.currentPage - delta + 1);
+    const rightBound = Math.min(this.totalPages - 1, this.currentPage + delta + 1);
+
+    for (let i = leftBound; i <= rightBound; i++) {
+      pages.push(i);
+    }
+
+    return pages;
   }
 }

@@ -17,3 +17,9 @@ export interface PagedResponse<T> {
   totalPages: number;
   empty: boolean;
 }
+
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+}

@@ -1,6 +1,7 @@
 :root {
   --primary-color: rgb(34, 37, 41);
   --primary-color-dark: rgb(110, 117, 124);
+  --accent-color: rgb(240, 240, 240);
 
   --bs-primary: var(--primary-color);
   --bs-primary-rgb: 186, 16, 16;
@@ -28,7 +29,6 @@
   border-color: var(--primary-color) !important;
 }
 
-/* Add these for active states and badges */
 .page-item.active .page-link {
   background-color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
@@ -58,7 +58,6 @@
   cursor: pointer;
 }
 
-/* Other Bootstrap components that might use primary color */
 .form-check-input:checked {
   background-color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
@@ -70,4 +69,26 @@ a {
 
 a:hover {
   color: var(--primary-color-dark);
+}
+
+.nav-tabs .nav-link {
+  color: var(--accent-color) !important;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--accent-color) !important;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--primary-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+.card-header-tabs .nav-link.active {
+  background-color: #fff !important;
+  border-bottom-color: #fff !important;
+}
+
+.nav-link:focus {
+  box-shadow: none !important;
 }
