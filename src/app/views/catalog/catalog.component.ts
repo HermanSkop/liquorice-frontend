@@ -8,11 +8,7 @@ import {PagedResponse} from '../../dtos/api-response';
 @Component({
   selector: 'app-catalog',
   templateUrl: './catalog.component.html',
-  imports: [
-    NgForOf,
-    FormsModule,
-    NgIf
-  ],
+  imports: [NgForOf, FormsModule, NgIf],
   styleUrls: ['./catalog.component.css']
 })
 export class CatalogComponent implements OnInit {
@@ -33,21 +29,6 @@ export class CatalogComponent implements OnInit {
 
   categories = ['Electronics', 'Accessories', 'Fashion'];
 
-  filteredProducts() {
-    return this.products
-      .filter(product => {
-        const matchesSearch = !this.searchTerm ||
-          product.name.toLowerCase().includes(this.searchTerm.toLowerCase());
-
-        const matchesCategory = !this.selectedCategory ||
-          (product.categories &&
-            product.categories.some(cat => cat.name === this.selectedCategory));
-
-        return matchesSearch && matchesCategory;
-      })
-      .sort((a, b) => this.sortOption === 'price' ? a.price - b.price : a.name.localeCompare(b.name));
-  }
-
   toggleLayout() {
     this.isSingleColumn = !this.isSingleColumn;
   }
@@ -57,12 +38,19 @@ export class CatalogComponent implements OnInit {
   }
 
   loadPage(page: number) {
-    this.productService.getProductPreviewDtos(page, this.pageSize).subscribe({
+    this.productService.getProductPreviewDtos(
+      page,
+      this.pageSize,
+      this.searchTerm,
+      this.selectedCategory,
+      this.sortOption
+    ).subscribe({
       next: (response: PagedResponse<ProductPreviewDto>) => {
+        console.log(response);
         this.products = response.content || [];
-        this.totalItems = response.totalElements;
-        this.totalPages = response.totalPages;
-        this.currentPage = response.number;
+        this.totalItems = response.totalElements || 0;
+        this.totalPages = response.totalPages || 1;
+        this.currentPage = response.pageNumber || 0;
       },
       error: error => {
         console.error('There was an error!', error);
@@ -70,14 +58,15 @@ export class CatalogComponent implements OnInit {
     });
   }
 
+  onFilterChange() {
+    this.currentPage = 0;
+    this.loadPage(0);
+  }
+
   previousPage() {
     if (this.currentPage > 0) {
       this.loadPage(this.currentPage - 1);
     }
-  }
-
-  getTotalPagesArray(): number[] {
-    return Array.from({length: this.totalPages}, (_, i) => i + 1);
   }
 
   goToPage(page: number) {
@@ -105,5 +94,9 @@ export class CatalogComponent implements OnInit {
     }
 
     return pages;
+  }
+
+  isLastPageVisible(): boolean {
+    return this.getVisiblePages().includes(this.totalPages);
   }
 }

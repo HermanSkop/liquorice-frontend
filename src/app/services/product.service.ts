@@ -1,20 +1,41 @@
-import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {ProductPreviewDto} from '../dtos/product-preview.dto';
-import {Injectable} from '@angular/core';
-import {apiUrl} from '../app.config';
-import {PagedResponse} from '../dtos/api-response';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ProductPreviewDto } from '../dtos/product-preview.dto';
+import { Injectable } from '@angular/core';
+import { apiUrl } from '../app.config';
+import { PagedResponse } from '../dtos/api-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  getProductPreviewDtos(page: number = 0, size: number = 10): Observable<PagedResponse<ProductPreviewDto>> {
+  getProductPreviewDtos(
+    page: number = 0,
+    size: number = 10,
+    searchTerm?: string,
+    category?: string,
+    sortBy?: string
+  ): Observable<PagedResponse<ProductPreviewDto>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    if (searchTerm) {
+      params = params.set('search', searchTerm);
+    }
+
+    if (category) {
+      params = params.set('categories', category);
+    }
+
+    if (sortBy) {
+      params = params.set('sort', sortBy);
+    }
+
     return this.http.get<PagedResponse<ProductPreviewDto>>(
-      `${apiUrl}/products?page=${page}&size=${size}`
+      `${apiUrl}/products`, { params }
     );
   }
 }

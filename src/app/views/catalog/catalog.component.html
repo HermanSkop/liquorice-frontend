@@ -8,16 +8,17 @@
         class="form-control"
         placeholder="Search..."
         [(ngModel)]="searchTerm"
+        (ngModelChange)="onFilterChange()"
       />
     </div>
     <div class="col-md-3">
-      <select class="form-select" [(ngModel)]="selectedCategory">
+      <select class="form-select" [(ngModel)]="selectedCategory" (ngModelChange)="onFilterChange()">
         <option value="">All Categories</option>
         <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
       </select>
     </div>
     <div class="col-md-3">
-      <select class="form-select" [(ngModel)]="sortOption">
+      <select class="form-select" [(ngModel)]="sortOption" (ngModelChange)="onFilterChange()">
         <option value="name">Sort by Name</option>
         <option value="price">Sort by Price</option>
       </select>
@@ -34,7 +35,7 @@
       class="mb-3"
       [class.col-md-12]="isSingleColumn"
       [class.col-md-4]="!isSingleColumn"
-      *ngFor="let product of filteredProducts()"
+      *ngFor="let product of products"
     >
       <div class="card h-100">
         <div class="row g-0 h-100 d-flex justify-content-around" [class.flex-row]="isSingleColumn" [class.text-center]="!isSingleColumn">
@@ -47,7 +48,7 @@
               <div class="left-side d-flex flex-column align-items-start">
                 <h5 class="card-title mb-3 text-start">{{ product.name }}</h5>
                 <p class="card-text text-start text-muted mb-3">{{ product.description }}</p>
-                <p *ngFor="let category of product.categories" class="card-text mb-0">{{ category.name }}</p>
+                <p *ngFor="let category of product.categories" class="card-text mb-0">{{ category }}</p>
                 <p class="card-text mt-2"><span class="badge bg-secondary">Available: {{ product.amountLeft }}</span></p>
               </div>
               <button class="btn btn-primary align-self-center d-flex align-items-center gap-2 px-3 py-2">

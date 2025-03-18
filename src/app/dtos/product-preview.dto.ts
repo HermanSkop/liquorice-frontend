@@ -5,6 +5,6 @@ export class ProductPreviewDto {
     public price: number,
     public image: string | null,
     public amountLeft: number,
-    public categories: {id: number, name: string}[]
+    public categories: string[],
   ) {}
 }
