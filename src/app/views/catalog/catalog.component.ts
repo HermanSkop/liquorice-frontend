@@ -14,6 +14,7 @@ import {PagedResponse} from '../../dtos/api-response';
 export class CatalogComponent implements OnInit {
   searchTerm: string = '';
   selectedCategory: string = '';
+  categories:string[] = [];
   sortOption: string = 'name';
   isSingleColumn: boolean = false;
 
@@ -27,14 +28,21 @@ export class CatalogComponent implements OnInit {
   constructor(private productService: ProductService) {
   }
 
-  categories = ['Electronics', 'Accessories', 'Fashion'];
-
   toggleLayout() {
     this.isSingleColumn = !this.isSingleColumn;
   }
 
   ngOnInit() {
-    this.loadPage(this.currentPage);
+    this.productService.getCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+        this.loadPage(this.currentPage);
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+        this.loadPage(this.currentPage);
+      }
+    });
   }
 
   loadPage(page: number) {

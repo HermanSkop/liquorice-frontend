@@ -38,4 +38,8 @@ export class ProductService {
       `${apiUrl}/products`, { params }
     );
   }
+
+  getCategories(): Observable<string[]> {
+    return this.http.get<string[]>(`${apiUrl}/products/categories`);
+  }
 }
