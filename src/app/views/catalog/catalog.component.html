@@ -37,71 +37,14 @@
       [class.col-md-4]="!isSingleColumn"
       *ngFor="let product of products"
     >
-      <div class="card h-100">
-        <div class="row g-0 h-100 d-flex justify-content-around" [class.flex-row]="isSingleColumn" [class.text-center]="!isSingleColumn">
-          <div class="col-md-3 w-auto align-content-center">
-            <img [src]="product.image ? ('data:image/jpeg;base64,' + product.image) : 'placeholder.png'"
-                 class="img-fluid rounded h-100" alt="{{ product.name }}" width="200">
-          </div>
-          <div class="col-md-8 align-content-center flex-grow-1">
-            <div class="card-body d-flex justify-content-between align-content-center">
-              <div class="left-side d-flex flex-column align-items-start">
-                <h5 class="card-title mb-3 text-start">{{ product.name }}</h5>
-                <p class="card-text text-start text-muted mb-3">{{ product.description }}</p>
-                <p *ngFor="let category of product.categories" class="card-text mb-0">{{ category }}</p>
-                <p class="card-text mt-2"><span class="badge bg-secondary">Available: {{ product.amountLeft }}</span></p>
-              </div>
-              <button class="btn btn-primary align-self-center d-flex align-items-center gap-2 px-3 py-2">
-                <i class="bi bi-cart-plus"></i>
-                <span class="badge bg-light text-primary ms-1">${{ product.price }}</span>
-              </button>            </div>
-          </div>
-        </div>
-      </div>
+      <app-product-card [product]="product" [isSingleColumn]="isSingleColumn"></app-product-card>
     </div>
   </div>
-  <div class="row mt-4">
-    <div class="col-md-12">
-      <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentPage === 0">
-            <a class="page-link" (click)="previousPage()" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-
-          <li class="page-item" [class.active]="currentPage === 0">
-            <a class="page-link" (click)="goToPage(0)">1</a>
-          </li>
-
-          <li *ngIf="currentPage > 3" class="page-item disabled">
-            <a class="page-link">...</a>
-          </li>
-
-          <ng-container *ngFor="let page of getVisiblePages()">
-            <li class="page-item" [class.active]="page === currentPage + 1">
-              <a class="page-link" (click)="goToPage(page - 1)">{{page}}</a>
-            </li>
-          </ng-container>
-
-          <li *ngIf="currentPage < totalPages - 4" class="page-item disabled">
-            <a class="page-link">...</a>
-          </li>
-
-          <li *ngIf="totalPages > 1" class="page-item" [class.active]="currentPage === totalPages - 1">
-            <a class="page-link" (click)="goToPage(totalPages - 1)">{{totalPages}}</a>
-          </li>
-
-          <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-            <a class="page-link" (click)="nextPage()" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <div class="text-center">
-        <span>Showing {{currentPage * pageSize + 1}} to {{getLastItemIndex()}} of {{totalItems}} items</span>
-      </div>
-    </div>
-  </div>
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [pageSize]="pageSize"
+    [totalItems]="totalItems"
+    (pageChange)="loadPage($event)">
+  </app-pagination>
 </div>

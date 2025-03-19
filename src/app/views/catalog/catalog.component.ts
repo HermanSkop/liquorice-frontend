@@ -4,11 +4,13 @@ import {FormsModule} from '@angular/forms';
 import {ProductService} from '../../services/product.service';
 import {ProductPreviewDto} from '../../dtos/product-preview.dto';
 import {PagedResponse} from '../../dtos/api-response';
+import {ProductCardComponent} from '../../commons/product-card/product-card.component';
+import {PaginationComponent} from '../../commons/pagination/pagination.component';
 
 @Component({
   selector: 'app-catalog',
   templateUrl: './catalog.component.html',
-  imports: [NgForOf, FormsModule, NgIf],
+  imports: [NgForOf, FormsModule, NgIf, ProductCardComponent, PaginationComponent],
   styleUrls: ['./catalog.component.css']
 })
 export class CatalogComponent implements OnInit {
@@ -89,22 +91,5 @@ export class CatalogComponent implements OnInit {
 
   getLastItemIndex(): number {
     return Math.min((this.currentPage + 1) * this.pageSize, this.totalItems);
-  }
-
-  getVisiblePages(): number[] {
-    const delta = 2;
-    const pages: number[] = [];
-    const leftBound = Math.max(2, this.currentPage - delta + 1);
-    const rightBound = Math.min(this.totalPages - 1, this.currentPage + delta + 1);
-
-    for (let i = leftBound; i <= rightBound; i++) {
-      pages.push(i);
-    }
-
-    return pages;
-  }
-
-  isLastPageVisible(): boolean {
-    return this.getVisiblePages().includes(this.totalPages);
   }
 }
