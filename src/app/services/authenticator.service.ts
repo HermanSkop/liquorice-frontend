@@ -65,8 +65,23 @@ export class AuthenticatorService {
   }
 
   logout() {
-    this.clearTokens();
-    this.router.navigate(['/login']);
+    const accessToken = this.getAccessToken();
+    const refreshToken = this.getRefreshToken();
+
+    this.http.post(`${apiUrl}/auth/logout`, {
+      accessToken,
+      refreshToken
+    }).subscribe({
+      next: resp => {
+        this.clearTokens();
+        this.router.navigate(['/login']);
+      },
+      error: err => {
+        console.error('Logout failed on server:', err);
+        this.clearTokens();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   refreshToken() {
