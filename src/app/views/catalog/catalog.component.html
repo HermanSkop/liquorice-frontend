@@ -8,7 +8,7 @@
         class="form-control"
         placeholder="Search..."
         [(ngModel)]="searchTerm"
-        (ngModelChange)="onFilterChange()"
+        (ngModelChange)="onSearchInput($event)"
       />
     </div>
     <div class="col-md-3">

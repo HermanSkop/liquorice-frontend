@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ProductService} from '../../services/product.service';
@@ -6,6 +6,7 @@ import {ProductPreviewDto} from '../../dtos/product-preview.dto';
 import {PagedResponse} from '../../dtos/api-response';
 import {ProductCardComponent} from '../../commons/product-card/product-card.component';
 import {PaginationComponent} from '../../commons/pagination/pagination.component';
+import {debounceTime, distinctUntilChanged, Subject, takeUntil} from 'rxjs';
 
 @Component({
   selector: 'app-catalog',
@@ -13,12 +14,15 @@ import {PaginationComponent} from '../../commons/pagination/pagination.component
   imports: [NgForOf, FormsModule, NgIf, ProductCardComponent, PaginationComponent],
   styleUrls: ['./catalog.component.css']
 })
-export class CatalogComponent implements OnInit {
+export class CatalogComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   selectedCategory: string = '';
   categories:string[] = [];
   sortOption: string = 'name';
   isSingleColumn: boolean = false;
+
+  private searchSubject = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   products: ProductPreviewDto[] = [];
 
@@ -35,14 +39,27 @@ export class CatalogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.searchSubject.pipe(
+      debounceTime(1000),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    ).subscribe(term => {
+      this.searchTerm = term;
+      this.loadPage(0);
+    });
+
+    this.loadCategories();
+  }
+
+  loadCategories() {
     this.productService.getCategories().subscribe({
       next: (categories) => {
         this.categories = categories;
-        this.loadPage(this.currentPage);
+        this.loadPage(0);
       },
       error: (error) => {
         console.error('Error loading categories:', error);
-        this.loadPage(this.currentPage);
+        this.loadPage(0);
       }
     });
   }
@@ -68,28 +85,16 @@ export class CatalogComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onSearchInput(term: string) {
+    this.searchSubject.next(term);
+  }
+
   onFilterChange() {
-    this.currentPage = 0;
     this.loadPage(0);
-  }
-
-  previousPage() {
-    if (this.currentPage > 0) {
-      this.loadPage(this.currentPage - 1);
-    }
-  }
-
-  goToPage(page: number) {
-    this.loadPage(page);
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages - 1) {
-      this.loadPage(this.currentPage + 1);
-    }
-  }
-
-  getLastItemIndex(): number {
-    return Math.min((this.currentPage + 1) * this.pageSize, this.totalItems);
   }
 }
