@@ -19,8 +19,8 @@ export class ProductService {
     sortBy?: string
   ): Observable<PagedResponse<ProductPreviewDto>> {
     let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+      .set('page', page)
+      .set('size', size);
 
     if (searchTerm) {
       params = params.set('search', searchTerm);

@@ -34,7 +34,8 @@
           <button class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2"
                   [class.mt-3]="!isSingleColumn"
                   [class.align-self-center]="!isSingleColumn"
-                  [class.align-self-start]="isSingleColumn">
+                  [class.align-self-start]="isSingleColumn"
+                  (click)="addToCart()">
             <i class="bi bi-cart-plus"></i>
             <span class="badge bg-light text-primary ms-1">${{ product.price }}</span>
           </button>

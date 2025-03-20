@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ProductPreviewDto} from '../../dtos/product-preview.dto';
+import {CartService} from '../../services/cart.service';
 import {NgForOf} from '@angular/common';
 
 @Component({
@@ -13,9 +14,19 @@ export class ProductCardComponent {
   @Input() product!: ProductPreviewDto;
   @Input() isSingleColumn: boolean = false;
 
-  isValidBase64(str: string | null): boolean {
-    if (!str) return false;
-    if (str.startsWith('[B@')) return false;
-    return /^[A-Za-z0-9+/=]+$/.test(str);
+  constructor(private cartService: CartService) {
+  }
+
+  addToCart(): void {
+    console.log(this.product);
+    this.cartService.addToCart(this.product);
+  }
+
+  isValidBase64(str: string): boolean {
+    try {
+      return btoa(atob(str)) === str;
+    } catch (err) {
+      return false;
+    }
   }
 }

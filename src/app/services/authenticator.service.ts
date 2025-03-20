@@ -3,14 +3,21 @@ import {HttpClient} from '@angular/common/http';
 import {AuthResponse} from '../dtos/api-response';
 import {apiUrl} from '../app.config';
 import {Router} from '@angular/router';
-import {tap} from 'rxjs';
+import {BehaviorSubject, Observable, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticatorService {
-  constructor(private http: HttpClient, private router: Router) {
+  private authStateSubject = new BehaviorSubject<boolean>(this.hasToken());
+
+  authStateChanged: Observable<boolean> = this.authStateSubject.asObservable();
+
+  constructor(private http: HttpClient, private router: Router) {}
+
+  private hasToken(): boolean {
+    return !!sessionStorage.getItem('accessToken');
   }
 
   login(email: string, password: string) {
@@ -20,12 +27,36 @@ export class AuthenticatorService {
     ).subscribe({
       next: authResponse => {
         this.saveTokens(authResponse);
+        console.log('auth state modified');
+        this.authStateSubject.next(true);
         this.router.navigate(['/']);
       },
       error: authResponse => {
         throw Error(authResponse);
       }
     })
+  }
+
+  logout() {
+    const accessToken = this.getAccessToken();
+    const refreshToken = this.getRefreshToken();
+
+    this.http.post(`${apiUrl}/auth/logout`, {
+      accessToken,
+      refreshToken
+    }).subscribe({
+      next: resp => {
+        this.clearTokens();
+        this.authStateSubject.next(false);
+        this.router.navigate(['/login']);
+      },
+      error: err => {
+        console.error('Logout failed on server:', err);
+        this.clearTokens();
+        this.authStateSubject.next(false);
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   register(email: string, password: string){
@@ -64,32 +95,13 @@ export class AuthenticatorService {
     return !!this.getAccessToken();
   }
 
-  logout() {
-    const accessToken = this.getAccessToken();
-    const refreshToken = this.getRefreshToken();
-
-    this.http.post(`${apiUrl}/auth/logout`, {
-      accessToken,
-      refreshToken
-    }).subscribe({
-      next: resp => {
-        this.clearTokens();
-        this.router.navigate(['/login']);
-      },
-      error: err => {
-        console.error('Logout failed on server:', err);
-        this.clearTokens();
-        this.router.navigate(['/login']);
-      }
-    });
-  }
-
   refreshToken() {
     return this.http.post<AuthResponse>(
       `${apiUrl}/auth/refresh`,
       { refreshToken: this.getRefreshToken() }
     ).pipe(
       tap((authResponse: AuthResponse) => {
+        console.log('refreshed token', authResponse);
         this.saveTokens(authResponse);
       }),
       catchError((error: any) => {
