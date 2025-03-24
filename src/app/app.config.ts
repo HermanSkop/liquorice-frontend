@@ -19,3 +19,4 @@ export const appConfig: ApplicationConfig = {
 export const pageSize = 10;
 export const apiVersion = 1;
 export const apiUrl = `http://localhost:8080/api/v${apiVersion}`;
+export const stripePublicKey = 'pk_test_51Oj66fC0thQyOQDadjcQBNcmOFB0T78o1wg1efnFXyMZsZLEHRqLITD8mIFlUuOXJKoSN0U8rjZvUIQxuWc9RQ9r00CuUdSGnl'

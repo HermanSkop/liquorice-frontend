@@ -1,0 +1,28 @@
+<div class="container mt-4" *ngIf="orderRequestDto">
+  <h2>Complete Payment</h2>
+
+  <div class="row">
+    <div class="col-md-8 order-md-1">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Payment Information</h4>
+        </div>
+        <div class="card-body">
+          <div id="card-element" class="form-control mb-3"></div>
+          <div *ngIf="paymentError" class="alert alert-danger">{{ paymentError }}</div>
+        </div>
+      </div>
+
+      <div class="d-grid">
+        <button (click)="processPayment()" class="btn btn-primary" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          Complete Payment
+        </button>
+      </div>
+
+      <div class="text-center mt-3">
+        <a routerLink="/checkout" class="btn btn-outline-secondary">Return to Checkout</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, count} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {CartResponseDto} from '../dtos/cart-response.dto';
 import {CartRequestDto} from '../dtos/cart-request.dto';
 import {CartItemDto} from '../dtos/cart-item.dto';
@@ -16,7 +16,6 @@ export class CartService {
   public cart$ = this.cartSubject.asObservable();
 
   constructor(private http: HttpClient, private authenticatorService: AuthenticatorService) {
-    this.loadCart();
     this.authenticatorService.authStateChanged.subscribe(authStateChanged => {
       console.log('Auth state changed', authStateChanged);
       if (authStateChanged) {
@@ -33,7 +32,7 @@ export class CartService {
           this.cartSubject.next(response.cartItems);
         },
         error: (error) => {
-          console.error('Error loading cart', error);
+          console.error(error);
         }
       });
   }
@@ -66,7 +65,7 @@ export class CartService {
         this.cartSubject.next(response.cartItems);
       },
       error: (error) => {
-        console.error('Error updating cart', error);
+        console.error(error);
       }
     });
   }

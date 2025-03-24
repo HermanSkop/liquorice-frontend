@@ -58,7 +58,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
         this.loadPage(0);
       },
       error: (error) => {
-        console.error('Error loading categories:', error);
+        console.error(error);
         this.loadPage(0);
       }
     });
@@ -79,7 +79,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
         this.currentPage = response.pageNumber || 0;
       },
       error: error => {
-        console.error('There was an error!', error);
+        console.error(error);
       }
     });
   }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
+import {pageSize} from '../../app.config';
 
 @Component({
   selector: 'app-pagination',
@@ -12,7 +13,7 @@ import {NgForOf, NgIf} from '@angular/common';
 export class PaginationComponent {
   @Input() currentPage: number = 0;
   @Input() totalPages: number = 0;
-  @Input() pageSize: number = 10;
+  @Input() pageSize: number = pageSize;
   @Input() totalItems: number = 0;
 
   @Output() pageChange = new EventEmitter<number>();

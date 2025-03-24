@@ -51,7 +51,7 @@ export class AuthenticatorService {
         this.router.navigate(['/login']);
       },
       error: err => {
-        console.error('Logout failed on server:', err);
+        console.error(err);
         this.clearTokens();
         this.authStateSubject.next(false);
         this.router.navigate(['/login']);
