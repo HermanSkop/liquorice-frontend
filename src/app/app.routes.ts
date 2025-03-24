@@ -6,6 +6,7 @@ import {AuthGuard} from './auth.guard';
 import {CheckoutComponent} from './views/checkout/checkout.component';
 import {OrderConfirmationComponent} from './views/order-confirmation/order-confirmation.component';
 import {PaymentComponent} from './views/payment/payment.component';
+import {OrderViewComponent} from './views/order-view/order-view.component';
 
 export const routes: Routes = [
   { path: '', component: CatalogComponent },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: 'login', component: AuthenticatorComponent },
   { path: 'order-confirmation', component: OrderConfirmationComponent },
   { path: 'payment/:id', component: PaymentComponent },
+  { path: 'orders', component: OrderViewComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

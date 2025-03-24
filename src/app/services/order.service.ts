@@ -4,6 +4,7 @@ import {apiUrl} from '../app.config';
 import {OrderRequestDto} from '../dtos/order-request.dto';
 import {OrderResponseDto} from '../dtos/order-response.dto';
 import {ClientIntentResponseDto} from '../dtos/client-intent-response.dto';
+import {AddressDto} from '../dtos/address.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class OrderService {
    * Create a payment intent for the order
    * @returns Client secret for the payment intent
    */
-  createPaymentIntent() {
-    return this.http.get<ClientIntentResponseDto>(`${apiUrl}/orders/init-order`);
+  createOrder(address: AddressDto) {
+    return this.http.post<ClientIntentResponseDto>(`${apiUrl}/orders`, address);
   }
 
   /**
@@ -27,5 +28,13 @@ export class OrderService {
    */
   completeOrder(orderRequest: OrderRequestDto) {
     return this.http.post<OrderResponseDto>(`${apiUrl}/orders/complete`, orderRequest);
+  }
+
+  getUserOrders() {
+    return this.http.get<OrderResponseDto[]>(`${apiUrl}/orders`);
+  }
+
+  getPaymentIntentForOrder(orderId: string) {
+    return this.http.get<ClientIntentResponseDto>(`${apiUrl}/orders/${orderId}/payment-intent`);
   }
 }

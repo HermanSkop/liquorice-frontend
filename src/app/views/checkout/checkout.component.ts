@@ -76,20 +76,21 @@ export class CheckoutComponent implements OnInit {
   }
 
   private createPaymentIntent() {
-    this.orderService.createPaymentIntent().subscribe({
+    const formValues = this.addressForm.value;
+
+    const addressDto = new AddressDto(
+      formValues.city,
+      'US',
+      formValues.addressLine1,
+      formValues.addressLine2 || '',
+      formValues.postalCode,
+      formValues.state
+    );
+
+    this.orderService.createOrder(addressDto).subscribe({
       next: (clientIntentResponse) => {
-        const formValues = this.addressForm.value;
 
-        const addressDto = new AddressDto(
-          formValues.city,
-          'US',
-          formValues.addressLine1,
-          formValues.addressLine2 || '',
-          formValues.postalCode,
-          formValues.state
-        );
-
-        sessionStorage.setItem('orderRequestDto', JSON.stringify(new OrderRequestDto(addressDto, clientIntentResponse.orderId)));
+        sessionStorage.setItem('orderRequestDto', JSON.stringify(new OrderRequestDto(clientIntentResponse.orderId)));
         sessionStorage.setItem('clientSecret', clientIntentResponse.clientSecret);
         this.router.navigate([`/payment/${clientIntentResponse.orderId}`]);
       },
