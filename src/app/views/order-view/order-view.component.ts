@@ -27,7 +27,6 @@ export class OrderViewComponent implements OnInit {
     this.loading = true;
     this.orderService.getCustomerOrders().subscribe({
       next: (orders) => {
-        console.log(orders);
         this.orders = orders;
         this.loading = false;
       },
