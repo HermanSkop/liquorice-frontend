@@ -30,8 +30,12 @@ export class OrderService {
     return this.http.post<OrderResponseDto>(`${apiUrl}/orders/complete`, orderRequest);
   }
 
-  getUserOrders() {
-    return this.http.get<OrderResponseDto[]>(`${apiUrl}/orders`);
+  /**
+   * Get all orders for the authenticated customer
+   * @returns List of order response DTOs
+   */
+  getCustomerOrders() {
+    return this.http.get<OrderResponseDto[]>(`${apiUrl}/customers/orders`);
   }
 
   getPaymentIntentForOrder(orderId: string) {
