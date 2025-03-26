@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { OrderViewComponent } from './order-view.component';
+import {OrderViewComponent} from './order-view.component';
 
 describe('OrderViewComponent', () => {
   let component: OrderViewComponent;
@@ -10,7 +10,7 @@ describe('OrderViewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [OrderViewComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(OrderViewComponent);
     component = fixture.componentInstance;

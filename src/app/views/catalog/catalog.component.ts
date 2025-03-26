@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ProductService} from '../../services/product.service';
 import {ProductPreviewDto} from '../../dtos/product-preview.dto';
@@ -18,7 +18,7 @@ import {pageSize} from '../../app.config';
 export class CatalogComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   selectedCategory: string = '';
-  categories:string[] = [];
+  categories: string[] = [];
   sortOption: string = 'name';
   isSingleColumn: boolean = false;
 

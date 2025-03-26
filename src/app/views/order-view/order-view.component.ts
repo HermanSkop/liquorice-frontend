@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, formatDate} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import {OrderService} from '../../services/order.service';
 import {OrderResponseDto, Status} from '../../dtos/order-response.dto';
-import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-order-view',

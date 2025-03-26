@@ -95,7 +95,8 @@
               <address>
                 {{ order.deliveryAddress.line1 }}<br>
                 <span *ngIf="order.deliveryAddress.line2">{{ order.deliveryAddress.line2 }}<br></span>
-                {{ order.deliveryAddress.city }}, {{ order.deliveryAddress.state }} {{ order.deliveryAddress.postalCode }}<br>
+                {{ order.deliveryAddress.city }}
+                , {{ order.deliveryAddress.state }} {{ order.deliveryAddress.postalCode }}<br>
                 {{ order.deliveryAddress.country }}
               </address>
             </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {pageSize} from '../../app.config';
 

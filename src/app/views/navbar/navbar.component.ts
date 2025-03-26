@@ -4,7 +4,6 @@ import {NgIf} from '@angular/common';
 import {AuthenticatorService} from '../../services/authenticator.service';
 import {Subject, takeUntil} from 'rxjs';
 import {CartService} from '../../services/cart.service';
-import {CartItemDto} from '../../dtos/cart-item.dto';
 
 @Component({
   selector: 'app-navbar',

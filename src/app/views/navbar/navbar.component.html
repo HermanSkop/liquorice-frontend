@@ -12,17 +12,14 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/orders">My orders</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/contact">Contact</a>
-        </li>
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" *ngIf="isAuthenticated">
           <a class="nav-link position-relative" routerLink="/cart">
             <i class="bi bi-cart3 fs-5 position-relative">
               <span *ngIf="cartItemCount > 0"
-                     class="position-absolute start-100 translate-middle badge rounded-pill bg-danger fs-8 p-1 lh-1"
-                     style="font-size: 0.65rem; transform: translate(-50%, -30%);">
+                    class="position-absolute start-100 translate-middle badge rounded-pill bg-danger fs-8 p-1 lh-1"
+                    style="font-size: 0.65rem; transform: translate(-50%, -30%);">
                  {{ cartItemCount }}
                </span>
             </i>

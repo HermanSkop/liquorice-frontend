@@ -18,7 +18,7 @@
 
         <ng-container *ngFor="let page of getVisiblePages()">
           <li class="page-item" [class.active]="page === currentPage + 1">
-            <a class="page-link" (click)="pageChange.emit(page - 1)">{{page}}</a>
+            <a class="page-link" (click)="pageChange.emit(page - 1)">{{ page }}</a>
           </li>
         </ng-container>
 
@@ -27,7 +27,7 @@
         </li>
 
         <li *ngIf="totalPages > 1" class="page-item" [class.active]="currentPage === totalPages - 1">
-          <a class="page-link" (click)="pageChange.emit(totalPages - 1)">{{totalPages}}</a>
+          <a class="page-link" (click)="pageChange.emit(totalPages - 1)">{{ totalPages }}</a>
         </li>
 
         <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
@@ -38,7 +38,7 @@
       </ul>
     </nav>
     <div class="text-center">
-      <span>Showing {{currentPage * pageSize + 1}} to {{getLastItemIndex()}} of {{totalItems}} items</span>
+      <span>Showing {{ currentPage * pageSize + 1 }} to {{ getLastItemIndex() }} of {{ totalItems }} items</span>
     </div>
   </div>
 </div>

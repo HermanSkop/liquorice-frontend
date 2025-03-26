@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {OrderResponseDto} from '../../dtos/order-response.dto';
+import {NgIf} from '@angular/common';
+import {Router, RouterLink} from '@angular/router';
 import {loadStripe, Stripe} from '@stripe/stripe-js';
 import {OrderService} from '../../services/order.service';
 import {CartService} from '../../services/cart.service';

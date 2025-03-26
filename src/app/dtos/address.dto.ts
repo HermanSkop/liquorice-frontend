@@ -1,4 +1,4 @@
-export class AddressDto{
+export class AddressDto {
   constructor(
     public city: string,
     public country: string = 'US',

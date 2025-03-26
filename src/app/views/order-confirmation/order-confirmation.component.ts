@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
-import { OrderResponseDto } from '../../dtos/order-response.dto';
+import {OrderResponseDto} from '../../dtos/order-response.dto';
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from '@angular/common';
 
 @Component({
@@ -18,7 +18,8 @@ import {CurrencyPipe, DatePipe, NgForOf, NgIf} from '@angular/common';
 export class OrderConfirmationComponent implements OnInit {
   order: OrderResponseDto | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+  }
 
   ngOnInit() {
     const orderData = sessionStorage.getItem('orderData');

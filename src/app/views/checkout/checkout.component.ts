@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Stripe} from '@stripe/stripe-js';
 import {CartService} from '../../services/cart.service';
 import {OrderService} from '../../services/order.service';
 import {Router, RouterLink} from '@angular/router';

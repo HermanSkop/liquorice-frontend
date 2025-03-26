@@ -1,15 +1,16 @@
-import { Observable } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { ProductPreviewDto } from '../dtos/product-preview.dto';
-import { Injectable } from '@angular/core';
+import {Observable} from 'rxjs';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {ProductPreviewDto} from '../dtos/product-preview.dto';
+import {Injectable} from '@angular/core';
 import {apiUrl, pageSize} from '../app.config';
-import { PagedResponse } from '../dtos/api-response';
+import {PagedResponse} from '../dtos/api-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   getProductPreviewDtos(
     page: number = 0,
@@ -35,7 +36,7 @@ export class ProductService {
     }
 
     return this.http.get<PagedResponse<ProductPreviewDto>>(
-      `${apiUrl}/products`, { params }
+      `${apiUrl}/products`, {params}
     );
   }
 

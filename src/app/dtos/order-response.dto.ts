@@ -14,7 +14,7 @@ export class OrderResponseDto {
   }
 }
 
-export enum Status{
+export enum Status {
   CREATED = 'CREATED',
   PROCESSING = 'PROCESSING',
   SHIPPING = 'SHIPPING',

@@ -14,7 +14,8 @@ export class AuthenticatorService {
 
   authStateChanged: Observable<boolean> = this.authStateSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+  }
 
   private hasToken(): boolean {
     return !!sessionStorage.getItem('accessToken');
@@ -59,7 +60,7 @@ export class AuthenticatorService {
     });
   }
 
-  register(email: string, password: string){
+  register(email: string, password: string) {
     this.http.post<AuthResponse>(
       `${apiUrl}/auth/register`,
       {email, password}
@@ -98,7 +99,7 @@ export class AuthenticatorService {
   refreshToken() {
     return this.http.post<AuthResponse>(
       `${apiUrl}/auth/refresh`,
-      { refreshToken: this.getRefreshToken() }
+      {refreshToken: this.getRefreshToken()}
     ).pipe(
       tap((authResponse: AuthResponse) => {
         console.log('refreshed token', authResponse);

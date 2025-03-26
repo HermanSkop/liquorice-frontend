@@ -12,38 +12,38 @@
       <div class="table-responsive">
         <table class="table">
           <thead>
-            <tr>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Subtotal</th>
-              <th>Actions</th>
-            </tr>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th>Actions</th>
+          </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of cartItems" class="align-middle">
-              <td>
-                <div class="d-flex align-items-center">
-                  <img [src]="item.product.image ? ('data:image/jpeg;base64,' + item.product.image) : 'placeholder.png'"
-                      class="img-thumbnail me-3" style="width: 60px;" alt="">
-                  <div>
-                    <h6 class="mb-0">{{ item.product.name }}</h6>
-                  </div>
+          <tr *ngFor="let item of cartItems" class="align-middle">
+            <td>
+              <div class="d-flex align-items-center">
+                <img [src]="item.product.image ? ('data:image/jpeg;base64,' + item.product.image) : 'placeholder.png'"
+                     class="img-thumbnail me-3" style="width: 60px;" alt="">
+                <div>
+                  <h6 class="mb-0">{{ item.product.name }}</h6>
                 </div>
-              </td>
-              <td>${{ item.product.price }}</td>
-              <td>
-                <input type="number" min="1" class="form-control form-control-sm" style="width: 70px;"
-                       [value]="item.quantity"
-                       (change)="updateQuantity(item.product.id, $event)">
-              </td>
-              <td>${{ item.product.price * item.quantity | number:'1.2-2' }}</td>
-              <td>
-                <button class="btn btn-sm btn-danger" (click)="removeItem(item.product.id)">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
+              </div>
+            </td>
+            <td>${{ item.product.price }}</td>
+            <td>
+              <input type="number" min="1" class="form-control form-control-sm" style="width: 70px;"
+                     [value]="item.quantity"
+                     (change)="updateQuantity(item.product.id, $event)">
+            </td>
+            <td>${{ item.product.price * item.quantity | number:'1.2-2' }}</td>
+            <td>
+              <button class="btn btn-sm btn-danger" (click)="removeItem(item.product.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>

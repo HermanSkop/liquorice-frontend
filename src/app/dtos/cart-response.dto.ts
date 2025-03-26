@@ -1,4 +1,4 @@
-import { CartItemDto } from './cart-item.dto';
+import {CartItemDto} from './cart-item.dto';
 
 export interface CartResponseDto {
   cartItems: CartItemDto[];
