@@ -7,6 +7,7 @@ import {PagedResponse} from '../../dtos/api-response';
 import {ProductCardComponent} from '../../commons/product-card/product-card.component';
 import {PaginationComponent} from '../../commons/pagination/pagination.component';
 import {debounceTime, distinctUntilChanged, Subject, takeUntil} from 'rxjs';
+import {pageSize} from '../../app.config';
 
 @Component({
   selector: 'app-catalog',
@@ -26,7 +27,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
 
   products: ProductPreviewDto[] = [];
 
-  pageSize: number = 10;
+  pageSize: number = pageSize;
   totalItems: number = 0;
   totalPages: number = 0;
   currentPage: number = 0;

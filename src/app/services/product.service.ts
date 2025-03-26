@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ProductPreviewDto } from '../dtos/product-preview.dto';
 import { Injectable } from '@angular/core';
-import { apiUrl } from '../app.config';
+import {apiUrl, pageSize} from '../app.config';
 import { PagedResponse } from '../dtos/api-response';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class ProductService {
 
   getProductPreviewDtos(
     page: number = 0,
-    size: number = 10,
+    size: number = pageSize,
     searchTerm?: string,
     category?: string,
     sortBy?: string
