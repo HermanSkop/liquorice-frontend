@@ -4,6 +4,7 @@ import {NgIf} from '@angular/common';
 import {AuthenticatorService} from '../../services/authenticator.service';
 import {Subject, takeUntil} from 'rxjs';
 import {CartService} from '../../services/cart.service';
+import {Role} from '../../dtos/role';
 
 @Component({
   selector: 'app-navbar',
@@ -18,6 +19,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   cartItemCount: number = 0;
   private destroy$ = new Subject<void>();
   isAuthenticated = false;
+  isAdmin = false;
 
   constructor(private cartService: CartService, private authenticatorService: AuthenticatorService) {
   }
@@ -32,15 +34,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.authenticatorService.authStateChanged.subscribe(authState => {
       this.isAuthenticated = authState;
     })
+
+    this.isAdmin = this.authenticatorService.hasRole(Role.ADMIN)
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  isLoggedIn(): boolean {
-    return this.authenticatorService.isLoggedIn();
   }
 
   logout() {

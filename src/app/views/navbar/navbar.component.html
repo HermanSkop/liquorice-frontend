@@ -14,7 +14,7 @@
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item" *ngIf="isAuthenticated">
+        <li class="nav-item" *ngIf="!isAdmin">
           <a class="nav-link position-relative" routerLink="/cart">
             <i class="bi bi-cart3 fs-5 position-relative">
               <span *ngIf="cartItemCount > 0"

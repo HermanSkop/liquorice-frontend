@@ -74,6 +74,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
       this.sortOption
     ).subscribe({
       next: (response: PagedResponse<ProductPreviewDto>) => {
+        console.log(response.content);
         this.products = response.content || [];
         this.totalItems = response.totalElements || 0;
         this.totalPages = response.totalPages || 1;

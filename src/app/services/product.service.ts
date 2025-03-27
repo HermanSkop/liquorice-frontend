@@ -43,4 +43,11 @@ export class ProductService {
   getCategories(): Observable<string[]> {
     return this.http.get<string[]>(`${apiUrl}/products/categories`);
   }
+
+  updateProductAvailability(productId: string, available: boolean): Observable<void> {
+    return this.http.patch<void>(
+      `${apiUrl}/products/${productId}/available`,
+      available
+    );
+  }
 }

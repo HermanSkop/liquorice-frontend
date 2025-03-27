@@ -7,6 +7,7 @@ export class ProductPreviewDto {
     public image: string | null,
     public amountLeft: number,
     public categories: string[],
+    public available: boolean
   ) {
   }
 }

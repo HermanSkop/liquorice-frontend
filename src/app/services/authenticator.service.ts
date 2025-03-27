@@ -5,6 +5,7 @@ import {apiUrl} from '../app.config';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import * as jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -110,5 +111,19 @@ export class AuthenticatorService {
         throw Error(error);
       })
     );
+  }
+
+  hasRole(roleName: string): boolean {
+    roleName = roleName.toUpperCase();
+    const token = this.getAccessToken();
+    if (!token) return false;
+
+    try {
+      const decodedToken: any = jwt_decode.jwtDecode(token);
+      return decodedToken.role == roleName
+    } catch (error) {
+      console.error('Error decoding token', error);
+      return false;
+    }
   }
 }
