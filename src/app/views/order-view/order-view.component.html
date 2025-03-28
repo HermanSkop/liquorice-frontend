@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2>My Orders</h2>
+  <h2>Orders</h2>
 
   <div *ngIf="loading" class="d-flex justify-content-center my-5">
     <div class="spinner-border" role="status">
@@ -12,29 +12,31 @@
   </div>
 
   <div *ngIf="!loading && orders.length === 0" class="text-center my-5">
-    <p>You don't have any orders yet.</p>
+    <p>There are no orders yet.</p>
     <a routerLink="/" class="btn btn-primary">Start Shopping</a>
   </div>
 
   <div *ngIf="orders.length > 0" class="card mb-4">
     <div class="card-header bg-light">
       <div class="row fw-bold">
-        <div class="col-md-2">Order ID</div>
-        <div class="col-md-2">Date</div>
+        <div class="col-md-3">Order ID</div>
+        <div class="col-md-3">Date</div>
         <div class="col-md-2">Status</div>
         <div class="col-md-2">Total</div>
-        <div class="col-md-4">Actions</div>
+        <div class="col-md-2">Actions</div>
       </div>
     </div>
 
     <div class="list-group list-group-flush">
       <div *ngFor="let order of orders" class="list-group-item">
         <div class="row align-items-center">
-          <div class="col-md-2">
+          <div class="col-md-3">
             <span class="d-md-none fw-bold">Order ID: </span>
-            {{ order.id | slice:0:8 }}...
+            <span class="text-wrap small" title="{{ order.id }}">
+              {{ order.id }}
+            </span>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <span class="d-md-none fw-bold">Date: </span>
             {{ formatDate(order.createdDate) }}
           </div>
@@ -47,13 +49,20 @@
             <span class="d-md-none fw-bold">Total: </span>
             ${{ order.totalAmount | number:'1.2-2' }}
           </div>
-          <div class="col-md-4">
-            <button *ngIf="order.status === 'CREATED'"
+          <div class="col-md-2">
+            <button *ngIf="order.status === Status.CREATED && authService.hasRole(Role.CUSTOMER)"
                     class="btn btn-primary btn-sm me-2"
                     (click)="continuePayment(order.id)"
                     [disabled]="loading">
               <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
               Complete Payment
+            </button>
+            <button *ngIf="order.status === Status.DELIVERED && authService.hasRole(Role.ADMIN)"
+                    class="btn btn-warning btn-sm me-2"
+                    (click)="refundOrder(order.id)"
+                    [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              Refund
             </button>
             <button class="btn btn-outline-secondary btn-sm"
                     data-bs-toggle="collapse"

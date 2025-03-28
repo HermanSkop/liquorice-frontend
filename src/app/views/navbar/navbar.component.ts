@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   isAdmin = false;
 
-  constructor(private cartService: CartService, private authenticatorService: AuthenticatorService) {
+  constructor(private cartService: CartService, protected authenticatorService: AuthenticatorService) {
   }
 
   ngOnInit(): void {
@@ -46,4 +46,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   logout() {
     this.authenticatorService.logout();
   }
+
+  protected readonly Role = Role;
 }

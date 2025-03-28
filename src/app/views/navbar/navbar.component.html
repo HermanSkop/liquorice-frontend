@@ -10,11 +10,11 @@
           <a class="nav-link active" routerLink="/">Catalog</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/orders">My orders</a>
+          <a class="nav-link" routerLink="/orders">Orders</a>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item" *ngIf="!isAdmin">
+        <li class="nav-item" *ngIf="authenticatorService.hasRole(Role.CUSTOMER)">
           <a class="nav-link position-relative" routerLink="/cart">
             <i class="bi bi-cart3 fs-5 position-relative">
               <span *ngIf="cartItemCount > 0"

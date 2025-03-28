@@ -3,6 +3,8 @@ import {CommonModule, formatDate} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import {OrderService} from '../../services/order.service';
 import {OrderResponseDto, Status} from '../../dtos/order-response.dto';
+import {AuthenticatorService} from '../../services/authenticator.service';
+import {Role} from '../../dtos/role';
 
 @Component({
   selector: 'app-order-view',
@@ -18,18 +20,25 @@ export class OrderViewComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
-    private router: Router
+    private router: Router,
+    public authService: AuthenticatorService
   ) {
   }
 
   ngOnInit() {
     this.loading = true;
-    this.orderService.getCustomerOrders().subscribe({
-      next: (orders) => {
+    let fetchingFunction;
+    if (this.authService.hasRole(Role.ADMIN)) {
+      fetchingFunction = this.orderService.getAllOrders.bind(this.orderService);
+    } else {
+      fetchingFunction = this.orderService.getCustomerOrders.bind(this.orderService);
+    }
+    fetchingFunction().subscribe({
+      next: (orders: OrderResponseDto[]) => {
         this.orders = orders;
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error fetching orders', error);
         this.errorMessage = 'Failed to load your orders. Please try again later.';
         this.loading = false;
@@ -75,4 +84,26 @@ export class OrderViewComponent implements OnInit {
       }
     });
   }
+
+  refundOrder(orderId: string) {
+    this.loading = true;
+
+    this.orderService.refundOrder(orderId).subscribe({
+      next: () => {
+        const orderIndex = this.orders.findIndex(order => order.id === orderId);
+        if (orderIndex !== -1) {
+          this.orders[orderIndex].status = Status.REFUNDED;
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error refunding order', error);
+        this.errorMessage = 'Unable to process refund for this order.';
+        this.loading = false;
+      }
+    });
+  }
+
+  protected readonly Role = Role;
+  protected readonly Status = Status;
 }

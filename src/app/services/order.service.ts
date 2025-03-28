@@ -41,4 +41,12 @@ export class OrderService {
   getPaymentIntentForOrder(orderId: string) {
     return this.http.get<ClientIntentResponseDto>(`${apiUrl}/orders/${orderId}/payment-intent`);
   }
+
+  getAllOrders() {
+    return this.http.get<OrderResponseDto[]>(`${apiUrl}/orders`);
+  }
+
+  refundOrder(orderId: string) {
+    return this.http.patch<OrderResponseDto>(`${apiUrl}/orders/${orderId}/refund`, {});
+  }
 }

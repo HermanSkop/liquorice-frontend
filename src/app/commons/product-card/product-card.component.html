@@ -43,16 +43,16 @@
               </label>
             </div>
 
-            <button *ngIf="authService.hasRole(Role.CUSTOMER) && product.available"
+            <button *ngIf="authService.hasRole(Role.CUSTOMER) && (product.available && product.amountLeft>0)"
                     class="btn btn-primary d-flex align-items-center gap-2"
                     (click)="addToCart()">
               <i class="bi bi-cart-plus"></i>
               <span>Add to Cart</span>
             </button>
 
-            <span *ngIf="!authService.hasRole(Role.ADMIN) && !product.available" class="badge bg-danger p-2">
-                                 Unavailable
-                               </span>
+            <span *ngIf="!authService.hasRole(Role.ADMIN) && (!product.available || product.amountLeft<=0)" class="badge bg-danger p-2">
+              Unavailable
+            </span>
           </div>
         </div>
       </div>

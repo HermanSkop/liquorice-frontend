@@ -7,6 +7,7 @@ import {CartItemDto} from '../dtos/cart-item.dto';
 import {apiUrl} from '../app.config';
 import {ProductPreviewDto} from '../dtos/product-preview.dto';
 import {AuthenticatorService} from './authenticator.service';
+import {Role} from '../dtos/role';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class CartService {
   constructor(private http: HttpClient, private authenticatorService: AuthenticatorService) {
     this.authenticatorService.authStateChanged.subscribe(authStateChanged => {
       console.log('Auth state changed', authStateChanged);
-      if (authStateChanged) {
+      if (authStateChanged && authenticatorService.hasRole(Role.CUSTOMER)) {
         this.loadCart();
       }
     });
