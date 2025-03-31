@@ -22,21 +22,28 @@ export class AuthenticatorService {
     return !!sessionStorage.getItem('accessToken');
   }
 
-  login(email: string, password: string) {
-    this.http.post<AuthResponse>(
+  login(email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(
       `${apiUrl}/auth/login`,
       {email, password}
-    ).subscribe({
-      next: authResponse => {
+    ).pipe(
+      tap(authResponse => {
         this.saveTokens(authResponse);
         console.log('auth state modified');
         this.authStateSubject.next(true);
-        this.router.navigate(['/']);
-      },
-      error: authResponse => {
-        throw Error(authResponse);
-      }
-    })
+      })
+    );
+  }
+
+  register(email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(
+      `${apiUrl}/auth/register`,
+      {email, password}
+    ).pipe(
+      tap(authResponse => {
+        this.login(email, password);
+      })
+    );
   }
 
   logout() {
@@ -59,20 +66,6 @@ export class AuthenticatorService {
         this.router.navigate(['/login']);
       }
     });
-  }
-
-  register(email: string, password: string) {
-    this.http.post<AuthResponse>(
-      `${apiUrl}/auth/register`,
-      {email, password}
-    ).subscribe({
-      next: authResponse => {
-        this.login(email, password);
-      },
-      error: authResponse => {
-        throw Error(authResponse);
-      }
-    })
   }
 
   saveTokens(authResponse: AuthResponse): void {

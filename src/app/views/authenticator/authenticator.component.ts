@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticatorService} from '../../services/authenticator.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-authenticator',
@@ -16,6 +17,8 @@ export class AuthenticatorComponent {
   registerForm: FormGroup;
   isLogin = true;
   submitted = false;
+  errorMessage = '';
+  loading = false;
 
   constructor(private fb: FormBuilder, private router: Router, private authenticatorService: AuthenticatorService) {
     this.loginForm = this.fb.nonNullable.group({
@@ -41,19 +44,51 @@ export class AuthenticatorComponent {
   toggleMode() {
     this.isLogin = !this.isLogin;
     this.submitted = false;
+    this.errorMessage = '';
   }
 
   onSubmit() {
     this.submitted = true;
+    this.errorMessage = '';
     const form = this.isLogin ? this.loginForm : this.registerForm;
 
     if (form.invalid) return;
 
+    this.loading = true;
+
     if (this.isLogin) {
-      this.authenticatorService.login(form.value.email, form.value.password);
+      this.authenticatorService.login(form.value.email, form.value.password).subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigate(['/']);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.loading = false;
+          if (error.status === 400) {
+            this.errorMessage = 'Invalid email or password';
+          } else {
+            this.errorMessage = 'Login failed. Please try again later.';
+          }
+          console.error('Login error:', error);
+        }
+      });
     } else {
-      this.authenticatorService.register(form.value.email, form.value.password);
-      this.isLogin = true;
+      this.authenticatorService.register(form.value.email, form.value.password).subscribe({
+        next: () => {
+          this.loading = false;
+          this.isLogin = true;
+          this.errorMessage = '';
+        },
+        error: (error: HttpErrorResponse) => {
+          this.loading = false;
+          if (error.status === 400) {
+            this.errorMessage = error.error?.message || 'Registration failed. Email may already be in use.';
+          } else {
+            this.errorMessage = 'Registration failed. Please try again later.';
+          }
+          console.error('Registration error:', error);
+        }
+      });
     }
   }
 }
