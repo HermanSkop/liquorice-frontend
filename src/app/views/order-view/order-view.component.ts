@@ -70,7 +70,7 @@ export class OrderViewComponent implements OnInit, OnDestroy {
       },
       error: error => {
         console.error('Error fetching orders', error);
-        this.errorMessage = 'Failed to load orders. Please try again later.';
+        this.errorMessage = 'Failed to load orders for this user.';
         this.loading = false;
       }
     });
