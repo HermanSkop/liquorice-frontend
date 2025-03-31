@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {apiUrl} from '../app.config';
 import {OrderRequestDto} from '../dtos/order-request.dto';
 import {OrderResponseDto} from '../dtos/order-response.dto';
@@ -48,5 +48,9 @@ export class OrderService {
 
   refundOrder(orderId: string) {
     return this.http.patch<OrderResponseDto>(`${apiUrl}/orders/${orderId}/refund`, {});
+  }
+
+  getAllOrdersForCustomer(userId?: string) {
+      return this.http.get<OrderResponseDto[]>(`${apiUrl}/customers/${userId}/orders`);
   }
 }

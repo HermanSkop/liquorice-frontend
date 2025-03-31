@@ -9,7 +9,8 @@ export class OrderResponseDto {
     public status: Status,
     public orderItems: OrderItemDto[],
     public estimatedDeliveryDate: string,
-    public deliveryAddress: AddressDto
+    public deliveryAddress: AddressDto,
+    public customerId: string,
   ) {
   }
 }

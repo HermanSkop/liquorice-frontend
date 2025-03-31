@@ -11,18 +11,38 @@
     {{ errorMessage }}
   </div>
 
-  <div *ngIf="!loading && orders.length === 0" class="text-center my-5">
+  <div *ngIf="authService.hasRole(Role.CUSTOMER) && !loading && orders.length === 0" class="text-center my-5">
     <p>There are no orders yet.</p>
     <a routerLink="/" class="btn btn-primary">Start Shopping</a>
+  </div>
+
+  <div *ngIf="authService.hasRole(Role.ADMIN)" class="input-group mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-search"></i>
+        </span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="User ID"
+      [(ngModel)]="userIdFilter"
+      (input)="filterOrders()">
+    <button
+      *ngIf="userIdFilter"
+      class="btn btn-outline-secondary"
+      type="button"
+      (click)="clearFilter()">
+      Clear
+    </button>
   </div>
 
   <div *ngIf="orders.length > 0" class="card mb-4">
     <div class="card-header bg-light">
       <div class="row fw-bold">
-        <div class="col-md-3">Order ID</div>
-        <div class="col-md-3">Date</div>
+        <div class="col-md-2">Order ID</div>
+        <div *ngIf="authService.hasRole(Role.ADMIN)" class="col-md-2">Customer ID</div>
+        <div [class]="authService.hasRole(Role.ADMIN) ? 'col-md-2' : 'col-md-3'">Date</div>
         <div class="col-md-2">Status</div>
-        <div class="col-md-2">Total</div>
+        <div class="col-md-1">Total</div>
         <div class="col-md-2">Actions</div>
       </div>
     </div>
@@ -30,13 +50,19 @@
     <div class="list-group list-group-flush">
       <div *ngFor="let order of orders" class="list-group-item">
         <div class="row align-items-center">
-          <div class="col-md-3">
+          <div class="col-md-2">
             <span class="d-md-none fw-bold">Order ID: </span>
             <span class="text-wrap small" title="{{ order.id }}">
               {{ order.id }}
             </span>
           </div>
-          <div class="col-md-3">
+          <div *ngIf="authService.hasRole(Role.ADMIN)" class="col-md-2">
+            <span class="d-md-none fw-bold">Customer ID: </span>
+            <span class="text-wrap small" title="{{ order.customerId }}">
+            {{ order.customerId }}
+          </span>
+          </div>
+          <div class="col-md-2">
             <span class="d-md-none fw-bold">Date: </span>
             {{ formatDate(order.createdDate) }}
           </div>
@@ -45,7 +71,7 @@
               {{ order.status }}
             </span>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <span class="d-md-none fw-bold">Total: </span>
             ${{ order.totalAmount | number:'1.2-2' }}
           </div>

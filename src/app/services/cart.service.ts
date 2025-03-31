@@ -20,6 +20,7 @@ export class CartService {
     this.authenticatorService.authStateChanged.subscribe(authStateChanged => {
       console.log('Auth state changed', authStateChanged);
       if (authStateChanged && authenticatorService.hasRole(Role.CUSTOMER)) {
+        console.log('INNN');
         this.loadCart();
       }
     });

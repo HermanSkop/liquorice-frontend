@@ -91,6 +91,7 @@ export class AuthenticatorService {
   clearTokens(): void {
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
+    console.log('accessToken', sessionStorage.getItem('accessToken'));
   }
 
   isLoggedIn(): boolean {

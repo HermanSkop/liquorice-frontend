@@ -1,22 +1,28 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule, formatDate} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import {OrderService} from '../../services/order.service';
 import {OrderResponseDto, Status} from '../../dtos/order-response.dto';
 import {AuthenticatorService} from '../../services/authenticator.service';
 import {Role} from '../../dtos/role';
+import {FormsModule} from '@angular/forms';
+import {debounceTime, distinctUntilChanged, Observable, Subject, takeUntil} from 'rxjs';
 
 @Component({
   selector: 'app-order-view',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './order-view.component.html',
   styleUrl: './order-view.component.css'
 })
-export class OrderViewComponent implements OnInit {
+export class OrderViewComponent implements OnInit, OnDestroy {
   orders: OrderResponseDto[] = [];
   loading = false;
   errorMessage = '';
+  userIdFilter = '';
+
+  private searchSubject = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private orderService: OrderService,
@@ -26,26 +32,60 @@ export class OrderViewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setupSearchDebounce();
+    this.fetchOrders();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private setupSearchDebounce() {
+    this.searchSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    ).subscribe(() => this.fetchOrders());
+  }
+
+  fetchOrders() {
     this.loading = true;
-    let fetchingFunction;
-    if (this.authService.hasRole(Role.ADMIN)) {
-      fetchingFunction = this.orderService.getAllOrders.bind(this.orderService);
+    this.errorMessage = '';
+
+    let observable: Observable<OrderResponseDto[]>;
+
+    if (!this.userIdFilter){
+      observable = this.orderService.getAllOrders()
+    } else if (this.authService.hasRole(Role.ADMIN)) {
+      observable = this.orderService.getAllOrdersForCustomer(this.userIdFilter)
     } else {
-      fetchingFunction = this.orderService.getCustomerOrders.bind(this.orderService);
+      observable = this.orderService.getCustomerOrders();
     }
-    fetchingFunction().subscribe({
-      next: (orders: OrderResponseDto[]) => {
+
+    observable.subscribe({
+      next: orders => {
         this.orders = orders;
         this.loading = false;
       },
-      error: (error: any) => {
+      error: error => {
         console.error('Error fetching orders', error);
-        this.errorMessage = 'Failed to load your orders. Please try again later.';
+        this.errorMessage = 'Failed to load orders. Please try again later.';
         this.loading = false;
       }
     });
   }
 
+  filterOrders() {
+    this.searchSubject.next(this.userIdFilter);
+  }
+
+  clearFilter() {
+    this.userIdFilter = '';
+    this.fetchOrders();
+  }
+
+  // Other existing methods remain unchanged
   getStatusClass(status: string): string {
     switch (status) {
       case Status.DELIVERED:
@@ -67,17 +107,13 @@ export class OrderViewComponent implements OnInit {
 
   continuePayment(orderId: string) {
     this.loading = true;
-
     this.orderService.getPaymentIntentForOrder(orderId).subscribe({
-      next: (response) => {
+      next: response => {
         sessionStorage.setItem('clientSecret', response.clientSecret);
-
-        const orderRequest = {orderId};
-        sessionStorage.setItem('orderRequestDto', JSON.stringify(orderRequest));
-
+        sessionStorage.setItem('orderRequestDto', JSON.stringify({orderId}));
         this.router.navigate(['/payment', orderId]);
       },
-      error: (error) => {
+      error: error => {
         console.error('Error getting payment intent', error);
         this.errorMessage = 'Unable to process payment for this order.';
         this.loading = false;
@@ -87,7 +123,6 @@ export class OrderViewComponent implements OnInit {
 
   refundOrder(orderId: string) {
     this.loading = true;
-
     this.orderService.refundOrder(orderId).subscribe({
       next: () => {
         const orderIndex = this.orders.findIndex(order => order.id === orderId);
@@ -96,7 +131,7 @@ export class OrderViewComponent implements OnInit {
         }
         this.loading = false;
       },
-      error: (error) => {
+      error: error => {
         console.error('Error refunding order', error);
         this.errorMessage = 'Unable to process refund for this order.';
         this.loading = false;
