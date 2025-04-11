@@ -20,7 +20,6 @@ export class CartService {
     this.authenticatorService.authStateChanged.subscribe(authStateChanged => {
       console.log('Auth state changed', authStateChanged);
       if (authStateChanged && authenticatorService.hasRole(Role.CUSTOMER)) {
-        console.log('INNN');
         this.loadCart();
       }
     });
@@ -43,7 +42,6 @@ export class CartService {
     if (this.cartSubject.value.some((item: CartItemDto) => item.product.id === product.id)) {
       console.log('quantity', product.id, quantity);
       this.addQuantity(product.id, quantity);
-      console.log('quantity updated');
       return;
     }
     this.cartSubject.value.push(new CartItemDto(product, quantity));

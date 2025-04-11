@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {AuthResponse} from '../dtos/api-response';
-import {apiUrl, authServerUrl} from '../app.config';
+import {authServerUrl} from '../app.config';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -114,7 +114,7 @@ export class AuthenticatorService {
 
     try {
       const decodedToken: any = jwt_decode.jwtDecode(token);
-      return decodedToken.role == roleName
+      return Array.isArray(decodedToken.roles) && decodedToken.roles.includes(roleName);
     } catch (error) {
       console.error('Error decoding token', error);
       return false;
