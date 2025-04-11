@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AuthResponse} from '../dtos/api-response';
-import {apiUrl} from '../app.config';
+import {apiUrl, authServerUrl} from '../app.config';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class AuthenticatorService {
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(
-      `${apiUrl}/auth/login`,
+      `${authServerUrl}/login`,
       {email, password}
     ).pipe(
       tap(authResponse => {
@@ -37,7 +37,7 @@ export class AuthenticatorService {
 
   register(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(
-      `${apiUrl}/auth/register`,
+      `${authServerUrl}/register`,
       {email, password}
     ).pipe(
       tap(authResponse => {
@@ -50,7 +50,7 @@ export class AuthenticatorService {
     const accessToken = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
 
-    this.http.post(`${apiUrl}/auth/logout`, {
+    this.http.post(`${authServerUrl}/logout`, {
       accessToken,
       refreshToken
     }).subscribe({
@@ -93,7 +93,7 @@ export class AuthenticatorService {
 
   refreshToken() {
     return this.http.post<AuthResponse>(
-      `${apiUrl}/auth/refresh`,
+      `${authServerUrl}/refresh`,
       {refreshToken: this.getRefreshToken()}
     ).pipe(
       tap((authResponse: AuthResponse) => {
