@@ -1,0 +1,14 @@
+
+.divider {
+  margin: 1rem 0;
+}
+
+.divider .border-bottom {
+  border-bottom: 1px solid #dee2e6;
+}
+
+#google-button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

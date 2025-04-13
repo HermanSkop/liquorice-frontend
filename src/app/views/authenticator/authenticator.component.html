@@ -20,6 +20,22 @@
             {{ errorMessage }}
           </div>
 
+          <!-- Google Sign-In Button -->
+          <div class="mb-4">
+            <div id="google-button"></div>
+            <div *ngIf="!googleScriptLoaded" class="text-center">
+              <small class="text-muted">Loading Google Sign-In...</small>
+            </div>
+          </div>
+
+          <div class="text-center mb-4">
+            <div class="divider d-flex align-items-center">
+              <span class="border-bottom flex-grow-1"></span>
+              <span class="px-2 text-muted">or</span>
+              <span class="border-bottom flex-grow-1"></span>
+            </div>
+          </div>
+
           <!-- Login Form -->
           <form *ngIf="isLogin" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">

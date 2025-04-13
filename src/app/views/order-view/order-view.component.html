@@ -17,9 +17,9 @@
   </div>
 
   <div *ngIf="authService.hasRole(Role.ADMIN)" class="input-group mb-3">
-        <span class="input-group-text">
-          <i class="bi bi-search"></i>
-        </span>
+    <span class="input-group-text">
+      <i class="bi bi-search"></i>
+    </span>
     <input
       type="text"
       class="form-control"
@@ -38,66 +38,102 @@
   <div *ngIf="orders.length > 0" class="card mb-4">
     <div class="card-header bg-light">
       <div class="row fw-bold">
-        <div class="col-md-2">Order ID</div>
-        <div *ngIf="authService.hasRole(Role.ADMIN)" class="col-md-2">Customer ID</div>
-        <div [class]="authService.hasRole(Role.ADMIN) ? 'col-md-2' : 'col-md-3'">Date</div>
-        <div class="col-md-2">Status</div>
-        <div class="col-md-1">Total</div>
-        <div class="col-md-2">Actions</div>
+        <!-- Adjust columns based on user role -->
+        <ng-container *ngIf="authService.hasRole(Role.ADMIN); else customerColumns">
+          <div class="col-md-2">Order ID</div>
+          <div class="col-md-2">Customer ID</div>
+          <div class="col-md-2">Date</div>
+          <div class="col-md-2">Status</div>
+          <div class="col-md-2">Total</div>
+          <div class="col-md-2">Actions</div>
+        </ng-container>
+        <ng-template #customerColumns>
+          <div class="col-md-3">Order ID</div>
+          <div class="col-md-3">Date</div>
+          <div class="col-md-2">Status</div>
+          <div class="col-md-2">Total</div>
+          <div class="col-md-2">Actions</div>
+        </ng-template>
       </div>
     </div>
 
     <div class="list-group list-group-flush">
       <div *ngFor="let order of orders" class="list-group-item">
         <div class="row align-items-center">
-          <div class="col-md-2">
-            <span class="d-md-none fw-bold">Order ID: </span>
-            <span class="text-wrap small" title="{{ order.id }}">
-              {{ order.id }}
-            </span>
-          </div>
-          <div *ngIf="authService.hasRole(Role.ADMIN)" class="col-md-2">
-            <span class="d-md-none fw-bold">Customer ID: </span>
-            <span class="text-wrap small" title="{{ order.customerId }}">
-            {{ order.customerId }}
-          </span>
-          </div>
-          <div class="col-md-2">
-            <span class="d-md-none fw-bold">Date: </span>
-            {{ formatDate(order.createdDate) }}
-          </div>
-          <div class="col-md-2">
-            <span class="badge rounded-pill px-3 py-2 {{ getStatusClass(order.status) }}">
-              {{ order.status }}
-            </span>
-          </div>
-          <div class="col-md-1">
-            <span class="d-md-none fw-bold">Total: </span>
-            ${{ order.totalAmount | number:'1.2-2' }}
-          </div>
-          <div class="col-md-2">
-            <button *ngIf="order.status === Status.CREATED && authService.hasRole(Role.CUSTOMER)"
-                    class="btn btn-primary btn-sm me-2"
-                    (click)="continuePayment(order.id)"
-                    [disabled]="loading">
-              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
-              Complete Payment
-            </button>
-            <button *ngIf="order.status === Status.DELIVERED && authService.hasRole(Role.ADMIN)"
-                    class="btn btn-warning btn-sm me-2"
-                    (click)="refundOrder(order.id)"
-                    [disabled]="loading">
-              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
-              Refund
-            </button>
-            <button class="btn btn-outline-secondary btn-sm"
-                    data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#collapse' + order.id">
-              Details
-            </button>
-          </div>
+          <!-- Adjust columns based on user role -->
+          <ng-container *ngIf="authService.hasRole(Role.ADMIN); else customerOrderRow">
+            <div class="col-md-2">
+              <span class="d-md-none fw-bold">Order ID: </span>
+              <span class="text-wrap small" title="{{ order.id }}">{{ order.id }}</span>
+            </div>
+            <div class="col-md-2">
+              <span class="d-md-none fw-bold">Customer ID: </span>
+              <span class="text-wrap small" title="{{ order.customerId }}">{{ order.customerId }}</span>
+            </div>
+            <div class="col-md-2">
+              <span class="d-md-none fw-bold">Date: </span>
+              {{ formatDate(order.createdDate) }}
+            </div>
+            <div class="col-md-2">
+              <span class="badge rounded-pill px-3 py-2 {{ getStatusClass(order.status) }}">
+                {{ order.status }}
+              </span>
+            </div>
+            <div class="col-md-2">
+              <span class="d-md-none fw-bold">Total: </span>
+              ${{ order.totalAmount | number:'1.2-2' }}
+            </div>
+            <div class="col-md-2">
+              <button *ngIf="order.status === Status.DELIVERED"
+                      class="btn btn-warning btn-sm me-2"
+                      (click)="refundOrder(order.id)"
+                      [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                Refund
+              </button>
+              <button class="btn btn-outline-secondary btn-sm"
+                      data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#collapse' + order.id">
+                Details
+              </button>
+            </div>
+          </ng-container>
+          <ng-template #customerOrderRow>
+            <div class="col-md-3">
+              <span class="d-md-none fw-bold">Order ID: </span>
+              <span class="text-wrap small" title="{{ order.id }}">{{ order.id }}</span>
+            </div>
+            <div class="col-md-3">
+              <span class="d-md-none fw-bold">Date: </span>
+              {{ formatDate(order.createdDate) }}
+            </div>
+            <div class="col-md-2">
+              <span class="badge rounded-pill px-3 py-2 {{ getStatusClass(order.status) }}">
+                {{ order.status }}
+              </span>
+            </div>
+            <div class="col-md-2">
+              <span class="d-md-none fw-bold">Total: </span>
+              ${{ order.totalAmount | number:'1.2-2' }}
+            </div>
+            <div class="col-md-2">
+              <button *ngIf="order.status === Status.CREATED"
+                      class="btn btn-primary btn-sm me-2"
+                      (click)="continuePayment(order.id)"
+                      [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                Complete Payment
+              </button>
+              <button class="btn btn-outline-secondary btn-sm"
+                      data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#collapse' + order.id">
+                Details
+              </button>
+            </div>
+          </ng-template>
         </div>
 
+        <!-- Order Details Collapse Section -->
         <div class="collapse mt-3" [id]="'collapse' + order.id">
           <div class="card">
             <div class="card-header bg-light">
@@ -130,8 +166,7 @@
               <address>
                 {{ order.deliveryAddress.line1 }}<br>
                 <span *ngIf="order.deliveryAddress.line2">{{ order.deliveryAddress.line2 }}<br></span>
-                {{ order.deliveryAddress.city }}
-                , {{ order.deliveryAddress.state }} {{ order.deliveryAddress.postalCode }}<br>
+                {{ order.deliveryAddress.city }}, {{ order.deliveryAddress.state }} {{ order.deliveryAddress.postalCode }}<br>
                 {{ order.deliveryAddress.country }}
               </address>
             </div>

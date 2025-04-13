@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {AuthResponse} from '../dtos/api-response';
 import {authServerUrl} from '../app.config';
 import {Router} from '@angular/router';
@@ -30,6 +30,24 @@ export class AuthenticatorService {
       tap(authResponse => {
         this.saveTokens(authResponse);
         console.log('auth state modified');
+        this.authStateSubject.next(true);
+      })
+    );
+  }
+
+
+  loginWithGoogle(credential: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(
+      `${authServerUrl}/login/google`,
+      null,
+      {
+        headers: new HttpHeaders({
+          'Authorization': `Bearer ${credential}`
+        })
+      }
+    ).pipe(
+      tap(authResponse => {
+        this.saveTokens(authResponse);
         this.authStateSubject.next(true);
       })
     );
