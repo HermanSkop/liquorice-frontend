@@ -1,4 +1,4 @@
-export class OrderRequestDto {
+export class PaymentRequestDto {
   constructor(
     public orderId: string,
   ) {

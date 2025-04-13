@@ -55,12 +55,10 @@ export class OrderViewComponent implements OnInit, OnDestroy {
 
     let observable: Observable<OrderResponseDto[]>;
 
-    if (!this.userIdFilter){
-      observable = this.orderService.getAllOrders()
-    } else if (this.authService.hasRole(Role.ADMIN)) {
+    if (this.authService.hasRole(Role.ADMIN) && this.userIdFilter) {
       observable = this.orderService.getAllOrdersForCustomer(this.userIdFilter)
     } else {
-      observable = this.orderService.getCustomerOrders();
+      observable = this.orderService.getAllOrders();
     }
 
     observable.subscribe({

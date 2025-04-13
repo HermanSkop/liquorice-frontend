@@ -34,6 +34,7 @@ export class CartService {
         },
         error: (error) => {
           console.error(error);
+          this.cartSubject.next([]);
         }
       });
   }

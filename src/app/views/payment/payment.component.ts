@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {NgIf} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import {loadStripe, Stripe} from '@stripe/stripe-js';
-import {OrderService} from '../../services/order.service';
 import {CartService} from '../../services/cart.service';
 import {stripePublicKey} from '../../app.config';
-import {OrderRequestDto} from '../../dtos/order-request.dto';
+import {PaymentService} from '../../services/payment.service';
+import {PaymentRequestDto} from '../../dtos/payment-request.dto';
 
 @Component({
   selector: 'app-payment',
@@ -17,7 +17,7 @@ import {OrderRequestDto} from '../../dtos/order-request.dto';
   styleUrl: './payment.component.css'
 })
 export class PaymentComponent implements OnInit {
-  orderRequestDto: OrderRequestDto | null = null;
+  paymentRequestDto: PaymentRequestDto | null = null;
   clientSecret: string = '';
   loading = false;
   paymentError = '';
@@ -26,7 +26,7 @@ export class PaymentComponent implements OnInit {
   private cardElement: any;
 
   constructor(
-    private orderService: OrderService,
+    private paymentService: PaymentService,
     private cartService: CartService,
     private router: Router
   ) {
@@ -36,7 +36,7 @@ export class PaymentComponent implements OnInit {
     const orderRequestDtoJson = sessionStorage.getItem('orderRequestDto');
     this.clientSecret = sessionStorage.getItem('clientSecret') || '';
     if (orderRequestDtoJson && this.clientSecret) {
-      this.orderRequestDto = JSON.parse(orderRequestDtoJson);
+      this.paymentRequestDto = JSON.parse(orderRequestDtoJson);
     } else {
       this.router.navigate(['/checkout']);
       return;
@@ -51,7 +51,7 @@ export class PaymentComponent implements OnInit {
   }
 
   processPayment() {
-    if (!this.stripe || !this.cardElement || !this.orderRequestDto) {
+    if (!this.stripe || !this.cardElement || !this.paymentRequestDto) {
       return;
     }
 
@@ -69,16 +69,14 @@ export class PaymentComponent implements OnInit {
   }
 
   private completeOrder() {
-    if (!this.orderRequestDto)
-      throw new Error('Order request DTO is not set');
+    if (!this.paymentRequestDto)
+      throw new Error('PaymentRequestDto is not set');
 
-    this.orderService.completeOrder(this.orderRequestDto).subscribe({
-      next: (orderResponse) => {
+    this.paymentService.payOrder(this.paymentRequestDto).subscribe({
+      next: () => {
         this.cartService.clearCart();
         sessionStorage.removeItem('pendingOrder');
-
-        sessionStorage.setItem('orderData', JSON.stringify(orderResponse));
-        this.router.navigate(['/order-confirmation']);
+        this.router.navigate(['/orders']);
       },
       error: () => {
         this.paymentError = 'Payment was processed but failed to complete the order';

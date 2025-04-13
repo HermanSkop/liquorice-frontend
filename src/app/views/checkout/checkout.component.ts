@@ -4,7 +4,7 @@ import {CartService} from '../../services/cart.service';
 import {OrderService} from '../../services/order.service';
 import {Router, RouterLink} from '@angular/router';
 import {AsyncPipe, DecimalPipe, NgForOf, NgIf} from '@angular/common';
-import {OrderRequestDto} from '../../dtos/order-request.dto';
+import {PaymentRequestDto} from '../../dtos/payment-request.dto';
 import {AddressDto} from '../../dtos/address.dto';
 
 @Component({
@@ -89,7 +89,7 @@ export class CheckoutComponent implements OnInit {
     this.orderService.createOrder(addressDto).subscribe({
       next: (clientIntentResponse) => {
 
-        sessionStorage.setItem('orderRequestDto', JSON.stringify(new OrderRequestDto(clientIntentResponse.orderId)));
+        sessionStorage.setItem('orderRequestDto', JSON.stringify(new PaymentRequestDto(clientIntentResponse.orderId)));
         sessionStorage.setItem('clientSecret', clientIntentResponse.clientSecret);
         this.router.navigate([`/payment/${clientIntentResponse.orderId}`]);
       },
